@@ -1,5 +1,6 @@
 package com.start.project.board.controller;
 
+import com.start.project.board.dto.BoardResponse;
 import com.start.project.board.dto.BoardSaveRequest;
 import com.start.project.board.dto.BoardSaveResponse;
 import com.start.project.board.dto.BoardsResponse;
@@ -22,6 +23,11 @@ public class BoardController {
         return boardService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public BoardResponse findByIdBoard(@PathVariable("id") Long id){
+        return boardService.boardDetaile(id);
+    }
+
     @PostMapping("")
     public BoardSaveResponse boardCreate(BoardSaveRequest boardSaveRequest){
         return boardService.boardCreate(boardSaveRequest);
@@ -29,7 +35,7 @@ public class BoardController {
 
     @PatchMapping("")
     public BoardSaveResponse boardUpdate(BoardSaveRequest boardSaveRequest){
-        return
+        return boardService.boardUpdate(boardSaveRequest);
     }
 
 }
