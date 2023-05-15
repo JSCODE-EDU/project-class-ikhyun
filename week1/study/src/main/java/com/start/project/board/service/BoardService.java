@@ -26,7 +26,15 @@ public class BoardService {
     }
 
     public BoardsResponse findAll(){
-        List<Board> boards = boardRepository.findAll();
+        List<Board> boards = boardRepository.findAllSort();
+        List<BoardResponse> boardResponses = boards.stream()
+                .map(BoardResponse::from)
+                .collect(Collectors.toList());
+        return new BoardsResponse(boardResponses);
+    }
+
+    public BoardsResponse findByTitleSort(String title){
+        List<Board> boards = boardRepository.findByTitleSort(title);
         List<BoardResponse> boardResponses = boards.stream()
                 .map(BoardResponse::from)
                 .collect(Collectors.toList());
@@ -41,12 +49,9 @@ public class BoardService {
     }
 
     public BoardSaveResponse boardCreate(BoardSaveRequest boardSaveRequest){
-        Board board = Board.builder()
-                .title(boardSaveRequest.getTitle())
-                .content(boardSaveRequest.getContent())
-                .build();
-        boardRepository.save(board);
-        return  new BoardSaveResponse(STATUS.Success201.getCode(), board.toString());
+
+        boardRepository.save(boardSaveRequest.toEntity());
+        return  new BoardSaveResponse(STATUS.Success201.getCode(), boardSaveRequest.toEntity().toString());
     }
 
     public BoardSaveResponse boardUpdate(BoardSaveRequest boardSaveRequest) {

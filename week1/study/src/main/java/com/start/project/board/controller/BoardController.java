@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping("aip/board")
+@RequestMapping("api/board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -19,8 +19,12 @@ public class BoardController {
         this.boardService = boardService;
     }
     @GetMapping("")
-    public BoardsResponse findAll(){
-        return boardService.findAll();
+    public BoardsResponse findAll(@RequestParam(name = "title", required = false) String title){
+        if(title.isEmpty()) {
+            return boardService.findAll();
+        }else{
+           return  boardService.findByTitleSort(title);
+        }
     }
 
     @GetMapping("/{id}")

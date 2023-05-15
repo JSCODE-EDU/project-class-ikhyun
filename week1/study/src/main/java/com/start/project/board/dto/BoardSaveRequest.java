@@ -1,9 +1,12 @@
 package com.start.project.board.dto;
 
+import com.start.project.board.entity.Board;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class BoardSaveRequest {
 
     private Long id;
@@ -21,6 +24,13 @@ public class BoardSaveRequest {
         this.id = id;
         this.title = title;
         this.content = content;
+    }
+
+    public Board toEntity(){
+        return Board.builder()
+                .title(title)
+                .content(content)
+                .build();
     }
 
 
