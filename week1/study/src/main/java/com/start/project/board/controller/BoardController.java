@@ -32,6 +32,11 @@ public class BoardController {
         return boardService.boardDetaile(id);
     }
 
+    @GetMapping("/search")
+    public BoardsResponse findAllBySearch(@RequestParam(name = "keyword") String keyword){
+        return boardService.findAllBySearch(keyword);
+    }
+
     @PostMapping("")
     public BoardSaveResponse boardCreate(BoardSaveRequest boardSaveRequest){
         return boardService.boardCreate(boardSaveRequest);
@@ -40,6 +45,12 @@ public class BoardController {
     @PatchMapping("")
     public BoardSaveResponse boardUpdate(BoardSaveRequest boardSaveRequest){
         return boardService.boardUpdate(boardSaveRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") Long id){
+
+        return id + "번이 정상적으로 삭제 되었습니다.";
     }
 
 }
