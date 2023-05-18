@@ -12,6 +12,6 @@ import java.util.List;
 public interface BoardRepository  extends JpaRepository<Board, Long> {
 
     List<Board> findTop100ByOrderById();
-    List<Board> findTop100ByTitleLikeOrderById(String title);
-    List<Board> findTop100ByTitleLikeOrContentLikeOrderById(String keyword1, String keyword2);
+    List<Board> findTop100ByTitleContainsOrderById(String title);
+    List<Board> findTop100ByTitleContainsOrContentContainsOrderById(String keyword1, String keyword2);
 }
