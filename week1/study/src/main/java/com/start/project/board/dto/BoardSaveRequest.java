@@ -1,10 +1,9 @@
 package com.start.project.board.dto;
 
 import com.start.project.board.entity.Board;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
+@NoArgsConstructor
 @Getter
 @ToString
 public class BoardSaveRequest {

@@ -7,6 +7,7 @@ import com.start.project.board.dto.BoardsResponse;
 import com.start.project.board.entity.Board;
 import com.start.project.board.repository.BoardRepository;
 import com.start.project.model.code.STATUS;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -25,22 +26,33 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
+    @Transactional(readOnly = true)
     public BoardsResponse findAll(){
-        List<Board> boards = boardRepository.findAllSort();
+        List<Board> boards = boardRepository.findTop100ByOrderById();
         List<BoardResponse> boardResponses = boards.stream()
                 .map(BoardResponse::from)
                 .collect(Collectors.toList());
         return new BoardsResponse(boardResponses);
     }
-
+    @Transactional(readOnly = true)
     public BoardsResponse findByTitleSort(String title){
-        List<Board> boards = boardRepository.findByTitleSort(title);
+        List<Board> boards = boardRepository.findTop100ByTitleContainsOrderById(title);
         List<BoardResponse> boardResponses = boards.stream()
                 .map(BoardResponse::from)
                 .collect(Collectors.toList());
         return new BoardsResponse(boardResponses);
     }
 
+    @Transactional(readOnly = true)
+    public BoardsResponse findAllBySearch(String keyword){
+        List<Board> boards = boardRepository.findTop100ByTitleContainsOrContentContainsOrderById(keyword, keyword);
+        List<BoardResponse> boardResponses = boards.stream()
+                .map(BoardResponse::from)
+                .collect(Collectors.toList());
+        return new BoardsResponse(boardResponses);
+    }
+
+    @Transactional(readOnly = true)
     public BoardResponse boardDetaile(Long id){
         return boardRepository.findById(id)
                 .map(BoardResponse::from)
@@ -51,7 +63,7 @@ public class BoardService {
     public BoardSaveResponse boardCreate(BoardSaveRequest boardSaveRequest){
 
         boardRepository.save(boardSaveRequest.toEntity());
-        return  new BoardSaveResponse(STATUS.Success201.getCode(), boardSaveRequest.toEntity().toString());
+        return  new BoardSaveResponse(STATUS.Success201.getCode(), boardSaveRequest.toString());
     }
 
     public BoardSaveResponse boardUpdate(BoardSaveRequest boardSaveRequest) {
@@ -66,6 +78,14 @@ public class BoardService {
 
         return  new BoardSaveResponse(STATUS.Success201.getCode(), boardSaveRequest.toString());
     }
+
+    public void delete(Long id){
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new FindException(new BoardSaveResponse(STATUS.Error404.getCode(),
+                id + "번 게시판이 없습니다.").toString()));
+        boardRepository.delete(board);
+    }
+
 
 
 }
