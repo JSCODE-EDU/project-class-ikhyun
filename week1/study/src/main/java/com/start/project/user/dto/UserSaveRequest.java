@@ -22,4 +22,11 @@ public class UserSaveRequest {
         this.password = password;
     }
 
+    public User toEntity(){
+        return User.builder()
+                .email(this.email)
+                .password(this.password)
+                .build();
+    }
+
 }

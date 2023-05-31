@@ -1,5 +1,6 @@
 package com.start.project.user.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,11 +20,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
     private String email;
 
     private String password;
 
     private LocalDateTime createdAt;
+
+    @Builder
+    public User(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
 }
